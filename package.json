@@ -1,0 +1,23 @@
+{
+  "name": "ryder",
+  "version": "1.0",
+  "description": "A discord bot dedicated to multiple categories",
+  "main": "index.js",
+  "scripts": {
+    "start": "node .",
+    "dev": "nodemon ."
+  },
+  "dependencies": {
+    "@discordjs/opus": "^0.5.3",
+    "better-sqlite3": "^7.1.0",
+    "discord-player": "^4.1.0",
+    "discord.js": "^12.2.0",
+    "dotenv": "^8.2.0",
+    "math-expression-evaluator": "^1.2.22",
+    "samp-query": "^0.1.5",
+    "superagent": "^5.3.1"
+  },
+  "keywords": [],
+  "author": "paco-dev",
+  "license": "ISC"
+}

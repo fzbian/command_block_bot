@@ -2,7 +2,7 @@ const DB = require("better-sqlite3");
 const settings = new DB("database/settings.db");
 
 module.exports = async (client) => {
-	settings.prepare("CREATE TABLE IF NOT EXISTS settings (guildid TEXT, prefix TEXT DEFAULT '?')").run();
+	settings.prepare("CREATE TABLE IF NOT EXISTS settings (guildid TEXT, prefix TEXT DEFAULT '?', language TEXT)").run();
 	console.log(`
 		Bot is ready!
 

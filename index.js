@@ -5,11 +5,11 @@ const path = require("path");
 const config = require("./config/bot.js")
 const { Player } = require('discord-player');
 
+client.config = require('./config/bot');
 client.commands = new Discord.Collection();
 client.owner = config.discord.owner;
-client.version = `Version ${config.version}`;
+client.version = `Version ${config.discord.version}`;
 client.player = new Player(client);
-client.config = require('./config/bot');
 client.emotes = config.emojis;
 client.filters = config.filters;
 client.commands = new Discord.Collection();

@@ -3,22 +3,22 @@ const DB = require("better-sqlite3");
 const settings = new DB("database/settings.db");
 
 module.exports = {
-  name: "setprefix",
-  description: "Set the bot prefix on this server",
+  name: "setlang",
+  description: "Set the language on this server",
   aliases: [],
   category: "administration",
   args: true,
-  usage: "<prefix> (max 3 characters)",
+  usage: "<language> (english, spanish)",
   run: async (client, message, args) => {
     //Language
     let file = settings.prepare("SELECT * FROM settings WHERE guildid = ?").get(message.guild.id);
     const guildLanguage = settings.language || "english";
     const language = require(`../../languages/${guildLanguage}`);
-    
+
     if (args[1]) {
       const embed = new MessageEmbed()
         .setColor("#f4f4f4")
-        .setDescription(language("ADMINISTRATION_SETPREFIX_PREFIX_CONTAIN_SPACES"))
+        .setDescription(language("ADMINISTRATION_SETLANG_LANGUAGE_CONTAIN_SPACES"))
         .setTimestamp()
         .setFooter(client.version, client.user.displayAvatarURL());
       let msg = await message.channel.send(embed);
@@ -31,38 +31,30 @@ module.exports = {
     ) {
       const embed = new MessageEmbed()
         .setColor("#f4f4f4")
-        .setDescription(language("ADMINISTRATION_SETPREFIX_PREFIX_CANNOT_BE_A_MENTION"))
+        .setDescription(language("ADMINISTRATION_SETLANG_LANGUAGE_CANNOT_BE_A_MENTION"))
         .setTimestamp()
         .setFooter(client.version, client.user.displayAvatarURL());
       let msg = await message.channel.send(embed);
       await msg.delete({ timeout: 10000 });
       message.delete().catch(console.error);
-    } else if (args[0].length > 3) {
+    } else if (file.language === args[0]) {
       const embed = new MessageEmbed()
         .setColor("#f4f4f4")
-        .setDescription(language("ADMINISTRATION_SETPREFIX_PREFIX_CANNOT_CONTAIN_MORE_THAN_THREE"))
-        .setTimestamp()
-        .setFooter(client.version, client.user.displayAvatarURL());
-      let msg = await message.channel.send(embed);
-      await msg.delete({ timeout: 10000 });
-      message.delete().catch(console.error);
-    } else if (file.prefix === args[0]) {
-      const embed = new MessageEmbed()
-        .setColor("#f4f4f4")
-        .setDescription(language("ADMINISTRATION_SETPREFIX_PREFIX_CANNOT_BE_THE_SAME"))
+        .setDescription(language("ADMINISTRATION_SETLANG_LENGUAGE_CANNOT_BE_THE_SAME"))
         .setTimestamp()
         .setFooter(client.version, client.user.displayAvatarURL());
       let msg = await message.channel.send(embed);
       await msg.delete({ timeout: 10000 });
       message.delete().catch(console.error);
     } else {
-      let newPrefix = args[0]
+      let newLanguage = args[0];
+      console.log(newLanguage)
       settings
-        .prepare("UPDATE settings SET prefix = ? WHERE guildid = ?")
+        .prepare("UPDATE settings SET language = ? WHERE guildid = ?")
         .run(args[0], message.guild.id);
       const embed = new MessageEmbed()
         .setColor("#f4f4f4")
-        .setDescription(language("ADMINISTRATION_SETPREFIX_PREFIX_HAS_BEEN_REPLACED", newPrefix))
+        .setDescription(language("ADMINISTRATION_SETLANG_LENGUAGE_HAS_BEEN_REPLACED", newLanguage))
         .setTimestamp()
         .setFooter(client.version, client.user.displayAvatarURL());
       let msg = await message.channel.send(embed);

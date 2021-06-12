@@ -1,29 +1,36 @@
 const Discord = require("discord.js");
+const DB = require("better-sqlite3");
+const settings = new DB("database/settings.db");
 
 module.exports = {
-	name: "kick",
-	description: "Kick a member who breaks the rules",
-	aliases: [],
-  category: "moderation",
-  args: true,
-  usage: "<@member|id> [reason]",
+    name: "kick",
+    description: "Kick a member who breaks the rules",
+    aliases: [],
+    category: "moderation",
+    args: true,
+    usage: "<@member|id> [reason]",
 	run: async (client, message, args) => {
-		let member = message.guild.members.cache.get(args[0].replace(/[<>@!]/g, ""));
-    let reason = (args.slice(1).join(" ") || "Reason not specified");
-    if (!message.guild.me.hasPermission("KICK_MEMBERS")) {
+    //Language
+    let file = settings.prepare("SELECT * FROM settings WHERE guildid = ?").get(message.guild.id);
+    const guildLanguage = settings.language || "english";
+    const language = require(`../../languages/${guildLanguage}`);
+
+	let member = message.guild.members.cache.get(args[0].replace(/[<@!>]/g, ""));
+    let reason = (args.slice(1).join(" ") || language("MODERATION_KICK_REASON_NO_SPECIFIED"));
+    if (!message.guild.me.hasPermission("BAN_MEMBERS")) {
       const embed = new Discord.MessageEmbed()
         .setColor("#f4f4f4")
         .setTitle(message.author.tag)
-        .setDescription("> I need permissions to kick")
+        .setDescription(language("MODERATION_KICK_I_NEED_PERMISSIONS"))
         .setTimestamp()
         .setFooter(client.version, client.user.displayAvatarURL());
       let msg = await message.channel.send(embed);
       await msg.delete({ timeout: 10000 });
-    } else if (!message.member.hasPermission("KICK_MEMBERS")) {
+    } else if (!message.member.hasPermission("BAN_MEMBERS")) {
       const embed = new Discord.MessageEmbed()
         .setColor("#f4f4f4")
         .setTitle(message.author.tag)
-        .setDescription("> You need permissions to kick")
+        .setDescription(language("MODERATION_KICK_YOU_NEED_PREMISSIONS"))
         .setTimestamp()
         .setFooter(client.version, client.user.displayAvatarURL());
       let msg = await message.channel.send(embed);
@@ -32,7 +39,7 @@ module.exports = {
       const embed = new Discord.MessageEmbed()
         .setColor("#f4f4f4")
         .setTitle(message.author.tag)
-        .setDescription("> You need put a valid user")
+        .setDescription(language("MODERATION_KICK_YOU_NEED_PUT_VALID_USER"))
         .setTimestamp()
         .setFooter(client.version, client.user.displayAvatarURL());
       let msg = await message.channel.send(embed);
@@ -41,7 +48,7 @@ module.exports = {
       const embed = new Discord.MessageEmbed()
         .setColor("#f4f4f4")
         .setTitle(message.author.tag)
-        .setDescription("> I can't kick this member")
+        .setDescription(language("MODERATION_KICK_I_CANT_BAN_THIS_MEMBER"))
         .setTimestamp()
         .setFooter(client.version, client.user.displayAvatarURL());
       let msg = await message.channel.send(embed);
@@ -50,7 +57,7 @@ module.exports = {
       const embed = new Discord.MessageEmbed()
         .setColor("#f4f4f4")
         .setTitle(message.author.tag)
-        .setDescription("> You don't kick this member")
+        .setDescription(language("MODERATION_KICK_YOU_DONT_BAN_THIS_MEMBER"))
         .setTimestamp()
         .setFooter(client.version, client.user.displayAvatarURL());
       let msg = await message.channel.send(embed);
@@ -59,17 +66,15 @@ module.exports = {
       const embed = new Discord.MessageEmbed()
         .setColor("#f4f4f4")
         .setTitle(member.user.tag)
-        .setDescription(`> You have been kicked from ${message.guild.name}!`)
-        .addField("> Author", `${message.author.tag} (${message.author.id})`)
-        .addField("> Reason", reason)
+        .setDescription(`${language("MODERATION_KICK_KICKED_TO_USER_YOU_HAVE_KICKED", message.guild.name)}\n${language("MODERATION_KICK_KICKED_TO_USER_YOU_HAVE_KICKED_AUTHOR", message.author.tag)}\n${language("MODERATION_KICK_KICKED_TO_USER_YOU_HAVE_KICKED_REASON", reason)}`)
         .setTimestamp()
         .setFooter(client.version, client.user.displayAvatarURL());
       await member.send(embed);
-      member.kick(`${reason}, by ${message.author.tag} (${message.author.id})`).then(async () => {
+        member.kick({ reason: `${member.user.tag} (ID: ${member.user.id}) ` + language("MODERATION_KICK_KICKED_TO_GUILD_SERVER_LOG") + ` ${message.author.tag} (ID: ${message.author.id}), ` + language("MODERATION_KICK_KICKED_TO_GUILD_SERVER_LOG_REASON", reason)}).then(async () => {
         const embed = new Discord.MessageEmbed()
           .setColor("#f4f4f4")
           .setTitle(message.author.tag)
-          .setDescription(`> ${member.user.tag} has been kicked from the guild`)
+          .setDescription(language("MODERATION_KICK_KICKED_TO_GUILD_HAS_BEEN_KICKED", member.user.tag))
           .setTimestamp()
           .setFooter(client.version, client.user.displayAvatarURL());
         let msg = await message.channel.send(embed)

@@ -1,5 +1,9 @@
-const { MessageEmbed } = require("discord.js");
+// Packages
+const Discord = require("discord.js");
+const DB = require("better-sqlite3");
+const settings = new DB("database/settings.db");
 const query = require('samp-query')
+
 
 module.exports = {
   name: "samp",
@@ -9,6 +13,7 @@ module.exports = {
   args: true,
   usage: "<ip>",
   run: async (client, message, args) => {
+
     var queryOptions = {
         host: args.join(" ")
     }
@@ -18,7 +23,7 @@ module.exports = {
             message.channel.send("Can't get information from this IP, verify it and try again.")
             console.log(error)
         } else {
-            const embed = new MessageEmbed()
+            const embed = new Discord.MessageEmbed()
             .setTitle("SAMP Server Information.")
             .addFields(
                 { name: 'Hostname', value: response.hostname },
@@ -28,7 +33,6 @@ module.exports = {
                 { name: 'Language', value: response.mapname, inline: true },
                 { name: 'Version', value: response.rules.version , inline: true },
                 { name: 'Web', value: response.rules.weburl , inline: true }
-                .setThumbnail("https://www.sovahost.net/wp-content/uploads/2020/02/samp-logo-png-6.png")
             )
             message.channel.send(embed)
         }

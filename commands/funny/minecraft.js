@@ -1,6 +1,8 @@
 const { MessageEmbed } = require("discord.js");
 const superagent = require("superagent");
 const minecraft = require("../../supplies/jsons/achievements.json");
+const DB = require("better-sqlite3");
+const settings = new DB("database/settings.db");
 
 module.exports = {
 	name: "minecraft",
@@ -10,11 +12,16 @@ module.exports = {
   args: true,
   usage: "<message> (min 2 characters & max 23)",
 	run: async (client, message, args) => {
+    //Language
+    let file = settings.prepare("SELECT * FROM settings WHERE guildid = ?").get(message.guild.id);
+    const guildLanguage = settings.language || "english";
+    const language = require(`../../languages/${guildLanguage}`);
+
     try {
       if (args.join(" ").length > 23) {
         const embed = new MessageEmbed()
           .setColor("#f4f4f4")
-          .setDescription("The message cannot contain more than 23 characters")
+          .setDescription("FUNNY_MINECRAFT_CONTAIN_CHARACTERS")
           .setTimestamp()
           .setFooter(client.version, client.user.displayAvatarURL());
         let msg = await message.channel.send(embed);
@@ -23,7 +30,7 @@ module.exports = {
       } else if (args.join(" ").length < 2) {
        const embed = new MessageEmbed()
           .setColor("#f4f4f4")
-          .setDescription("The message must contain at least 2 characters")
+          .setDescription(language("FUNNY_MINECRAFT_LEAST_TWO_CHARACTERS"))
           .setTimestamp()
           .setFooter(client.version, client.user.displayAvatarURL());
         let msg = await message.channel.send(embed);

@@ -1,6 +1,6 @@
 {
   "name": "ryder",
-  "version": "1.0",
+  "version": "1.1.2",
   "description": "A discord bot dedicated to multiple categories",
   "main": "index.js",
   "scripts": {
@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@discordjs/opus": "^0.5.3",
+    "alexflipnote.js": "^2.5.0",
     "better-sqlite3": "^7.1.0",
     "discord-player": "^4.1.0",
     "discord.js": "^12.2.0",

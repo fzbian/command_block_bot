@@ -1,4 +1,6 @@
 const Discord = require("discord.js");
+const DB = require("better-sqlite3");
+const settings = new DB("database/settings.db");
 
 module.exports = {
 	name: "ban",
@@ -8,13 +10,18 @@ module.exports = {
   args: true,
   usage: "<@member|id> [reason]",
 	run: async (client, message, args) => {
+    //Language
+    let file = settings.prepare("SELECT * FROM settings WHERE guildid = ?").get(message.guild.id);
+    const guildLanguage = settings.language || "english";
+    const language = require(`../../languages/${guildLanguage}`);
+
 		let member = message.guild.members.cache.get(args[0].replace(/[<@!>]/g, ""));
-    let reason = (args.slice(1).join(" ") || "Reason not specified");
+    let reason = (args.slice(1).join(" ") || language("MODERATION_BAN_REASON_NO_SPECIFIED"));
     if (!message.guild.me.hasPermission("BAN_MEMBERS")) {
       const embed = new Discord.MessageEmbed()
         .setColor("#f4f4f4")
         .setTitle(message.author.tag)
-        .setDescription("> I need permissions to ban")
+        .setDescription(language("MODERATION_BAN_I_NEED_PERMISSIONS"))
         .setTimestamp()
         .setFooter(client.version, client.user.displayAvatarURL());
       let msg = await message.channel.send(embed);
@@ -23,7 +30,7 @@ module.exports = {
       const embed = new Discord.MessageEmbed()
         .setColor("#f4f4f4")
         .setTitle(message.author.tag)
-        .setDescription("> You need permissions to ban")
+        .setDescription(language("MODERATION_BAN_YOU_NEED_PREMISSIONS"))
         .setTimestamp()
         .setFooter(client.version, client.user.displayAvatarURL());
       let msg = await message.channel.send(embed);
@@ -32,7 +39,7 @@ module.exports = {
       const embed = new Discord.MessageEmbed()
         .setColor("#f4f4f4")
         .setTitle(message.author.tag)
-        .setDescription("> You need put a valid user")
+        .setDescription(language("MODERATION_BAN_YOU_NEED_PUT_VALID_USER"))
         .setTimestamp()
         .setFooter(client.version, client.user.displayAvatarURL());
       let msg = await message.channel.send(embed);
@@ -41,7 +48,7 @@ module.exports = {
       const embed = new Discord.MessageEmbed()
         .setColor("#f4f4f4")
         .setTitle(message.author.tag)
-        .setDescription("> I can't ban this member")
+        .setDescription(language("MODERATION_BAN_I_CANT_BAN_THIS_MEMBER"))
         .setTimestamp()
         .setFooter(client.version, client.user.displayAvatarURL());
       let msg = await message.channel.send(embed);
@@ -50,7 +57,7 @@ module.exports = {
       const embed = new Discord.MessageEmbed()
         .setColor("#f4f4f4")
         .setTitle(message.author.tag)
-        .setDescription("> You don't ban this member")
+        .setDescription(language("MODERATION_BAN_YOU_DONT_BAN_THIS_MEMBER"))
         .setTimestamp()
         .setFooter(client.version, client.user.displayAvatarURL());
       let msg = await message.channel.send(embed);
@@ -59,17 +66,15 @@ module.exports = {
       const embed = new Discord.MessageEmbed()
         .setColor("#f4f4f4")
         .setTitle(member.user.tag)
-        .setDescription(`> You have been banned from ${message.guild.name}!`)
-        .addField("> Author", `${message.author.tag} (${message.author.id})`)
-        .addField("> Reason", reason)
+        .setDescription(`${language("MODERATION_BAN_BANNED_TO_USER_YOU_HAVE_BANNED", message.guild.name)}\n${language("MODERATION_BAN_BANNED_TO_USER_YOU_HAVE_BANNED_AUTHOR", message.author.tag)}\n${language("MODERATION_BAN_BANNED_TO_USER_YOU_HAVE_BANNED_REASON", reason)}`)
         .setTimestamp()
         .setFooter(client.version, client.user.displayAvatarURL());
       await member.send(embed);
-      member.ban({ reason: `${reason}, by ${message.author.tag} (${message.author.id})` }).then(async () => {
+        member.ban({ reason: `${member.user.tag} (ID: ${member.user.id}) ` + language("MODERATION_BAN_BANNED_TO_GUILD_SERVER_LOG") + ` ${message.author.tag} (ID: ${message.author.id}), ` + language("MODERATION_BAN_BANNED_TO_GUILD_SERVER_LOG_REASON", reason)}).then(async () => {
         const embed = new Discord.MessageEmbed()
           .setColor("#f4f4f4")
           .setTitle(message.author.tag)
-          .setDescription(`> ${member.user.tag} has been banned from the guild`)
+          .setDescription(language("MODERATION_BAN_BANNED_TO_GUILD_HAS_BEEN_BANNED", member.user.tag))
           .setTimestamp()
           .setFooter(client.version, client.user.displayAvatarURL());
         let msg = await message.channel.send(embed)

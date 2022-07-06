@@ -1,5 +1,5 @@
-<p align="center">
 ![](https://raw.githubusercontent.com/fzbian/command_block_bot/main/imgs/banner.png)
+<p align="center">
 block command is a discord bot in which it contains a large number of functions to improve the efficiency of users on their discord servers, the main purpose of the bot is to do part of a learning by its developers.
 </p>
 

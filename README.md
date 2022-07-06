@@ -1,43 +1,33 @@
+<p align="center">
+![](https://raw.githubusercontent.com/fzbian/command_block_bot/main/imgs/banner.png)
+block command is a discord bot in which it contains a large number of functions to improve the efficiency of users on their discord servers, the main purpose of the bot is to do part of a learning by its developers.
+</p>
 
-# Ryder Discord Bot
-
-a discord bot with multiple commands and functions
-
-## Configuration files
-Create a folder called `config`, in it add a file called `bot.js` that should contain the following
-
-    
-    module.exports = {
-    emojis: {
-	    off:  ':x:',
-	    error:  ':warning:',
-	    queue:  ':bar_chart:',
-	    music:  ':musical_note:',
-	    success:  ':white_check_mark:',
-    },
-    discord: {
-	    owner:  "YOUR-DISCORD-ID",
-	    token:  'TOKEN',
-	    prefix:  '!',
-	    activity:  'ACTIVITY',
-    },
-    filters: ['8D', 'gate', 'haas', 'phaser', 'treble', 'tremolo', 'vibrato', 'reverse', 'karaoke', 'flanger', 'mcompand', 'pulsator', 'subboost', 'bassboost', 'vaporwave', 'nightcore', 'normalizer', 'surrounding'],
-    };
+## Setting up
+rename the file `config/bot.js.example` to `config/bot.js` and configure the necessary credentials for it to work
 
 ## Initialize the bot
-follow the steps for the installation of the dependencies and others
+install dependencies
+```javascript
+npm install
+npm install -g nodemon
+```
+some commands will be configured for its development and startup
+```javascript
+npm run dev
+npm start
+```
 
-    npm install
-    npm install -g nodemon
+## Translation
+The bot is moderately translated manually, however the translations are not very accurate, you can contribute by translating it ;)
 
-### initialization
-development
+## Main commands
+|Command|Description|
+|------------|------------|
+|setlang|determine the language bot|
+|setprefix|determine the prefix bot|
+|about|everything related to the bot and its information|
+|help|bot commands and functions|
 
-    npm run dev
-use
-
-    npm start
-
-## Credits
-
-ZerioDev (Music Code)
+## Contributors
+https://github.com/ZerioDev/Music-bot

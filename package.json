@@ -1,6 +1,6 @@
 {
-  "name": "ryder",
-  "version": "1.1.2",
+  "name": "Command Block",
+  "version": "1.0",
   "description": "A discord bot dedicated to multiple categories",
   "main": "index.js",
   "scripts": {
@@ -14,11 +14,12 @@
     "discord-player": "^4.1.0",
     "discord.js": "^12.2.0",
     "dotenv": "^8.2.0",
+    "ffmpeg-static": "^4.4.1",
     "math-expression-evaluator": "^1.2.22",
     "samp-query": "^0.1.5",
     "superagent": "^5.3.1"
   },
   "keywords": [],
-  "author": "paco-dev",
+  "author": "fzbian",
   "license": "ISC"
 }

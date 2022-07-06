@@ -1,5 +1,7 @@
 const Discord = require("discord.js");
 const config =  require("../../config/bot")
+const DB = require("better-sqlite3");
+const settings = new DB("database/settings.db");
 
 module.exports = {
   name: "about",
@@ -9,6 +11,12 @@ module.exports = {
   args: false,
   usage: "",
   run: async (client, message, args) => {
+
+    //Language
+    let file = settings.prepare("SELECT * FROM settings WHERE guildid = ?").get(message.guild.id);
+    const guildLanguage = settings.language || "english";
+    const language = require(`../../languages/${guildLanguage}`);
+
     let owner = client.users.cache.get(config.discord.owner)
     let seconds = (client.uptime / 1000);
     let d = Math.floor(seconds / 86400);
@@ -24,27 +32,27 @@ module.exports = {
     
     const embed = new Discord.MessageEmbed()
       .setColor("#f4f4f4")
-      .setDescription(`> **[Developer]**
+      .setDescription(`> **[${language("INFORMATION_ABOUT_ABOUTABOUT_DEVELOPER")}]**
         > ${owner.tag} (**${owner.id}**)
         > 
-        > **[Ping]**
+        > **[${language("INFORMATION_ABOUT_ABOUT_PING")}]**
         > 🏓 ${client.ws.ping} ms
         > 
-        > **[Uptime]**
+        > **[${language("INFORMATION_ABOUT_UPTIME")}]**
         > ${d}d ${h}h ${m}m ${s}s
         > 
-        > **[Library]**
+        > **[${language("INFORMATION_ABOUT_LIBRARY")}]**
         > Discord.js v${Discord.version}
         > 
-        > **[Commands]**
+        > **[${language("INFORMATION_ABOUT_COMMANDS")}]**
         > ${client.commands.size}
         > 
-        > **[Servers]**
+        > **[${language("INFORMATION_ABOUT_SERVERS")}]**
         > ${client.guilds.cache.size}
         > 
-        > **[Users]**
-        > Humans: ${client.users.cache.filter(x => !x.bot).size}
-        > Robots: ${client.users.cache.filter(x => x.bot).size.toLocaleString()}
+        > **[${language("INFORMATION_ABOUT_USERS")}]**
+        > ${language("INFORMATION_ABOUT_USERS_HUMANS")}: ${client.users.cache.filter(x => !x.bot).size}
+        > ${language("INFORMATION_ABOUT_USERS_ROBOTS")}: ${client.users.cache.filter(x => x.bot).size.toLocaleString()}
         > <:online:731414132963934249> ${online} <:idle:731414172897771603> ${idle} <:dnd:731414184881029121> ${dnd} <:streaming:731414204271165471> ${streaming} <:offline:731414156867010721> ${offline}`)
       .setTimestamp()
       .setFooter(client.version, client.user.displayAvatarURL());

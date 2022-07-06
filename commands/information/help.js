@@ -10,6 +10,11 @@ module.exports = {
   args: false,
   usage: "[commandName]",
   run: async (client, message, args) => {
+    //Language
+    let file = settings.prepare("SELECT * FROM settings WHERE guildid = ?").get(message.guild.id);
+    const guildLanguage = settings.language || "english";
+    const language = require(`../../languages/${guildLanguage}`);
+
     let prefix = settings
       .prepare("SELECT prefix FROM settings WHERE guildid = ?")
       .get(message.guild.id).prefix;
@@ -23,19 +28,19 @@ module.exports = {
       if (command && command.category != "development") {
         const embed = new MessageEmbed()
           .setColor("#f4f4f4")
-          .setAuthor(`Help | ${commandName}`)
+          .setAuthor(`${language("INFORMATION_HELP")} | ${commandName}`)
           .setDescription(
-            `> **[Description]**
+            `> **[${languaje("INFORMATION_HELP_DESCRIPTION")}]**
           > \`${command.description}\`
           > 
-          > **[Aliases]**
+          > **[${languaje("INFORMATION_HELP_ALIASES")}]**
           > \`${
             command.aliases.length === 0
-              ? "Has no aliases"
+              ? `"${languaje("INFORMATION_HELP_ALIASES")}`
               : command.aliases.join("`, `")
           }\`
           > 
-          > **[Usage]**
+          > **[${languaje("INFORMATION_HELP_USAGE")}]**
           > \`${prefix}${commandName} ${command.usage}\``
           )
           .setTimestamp()
@@ -44,49 +49,49 @@ module.exports = {
       } else {
         const embed = new MessageEmbed()
           .setColor("#f4f4f4")
-          .setDescription(`The command \`${commandName}\` was not found`)
+          .setDescription(`${language("INFORMATION_HELP_COMMAND_NOT_FOUND", commandName)}`)
           .setTimestamp()
           .setFooter(client.version, client.user.displayAvatarURL());
         message.channel.send(embed);
       }
     } else {
-      let msg = await message.channel.send("Wait a moment...");
+      let msg = await message.channel.send(`${language("INFORMATION_HELP_WAIT_A_MOMENT")}`);
       setTimeout(() => {
         let embed = new MessageEmbed()
           .setColor("#f4f4f4")
-          .setAuthor(`Help | ${client.user.username}`)
+          .setAuthor(`${language("INFORMATION_HELP")} | ${client.user.username}`)
           .setDescription(
-            `> **[Administration]**
+            `> **[${language("INFORMATION_HELP_COMMANDS_ADMINISTRATION")}]**
           > \`${client.commands
             .filter((cmd) => cmd.category === "administration")
             .keyArray()
             .join("`, `")}\`
           > 
-          > **[Funny]**
+          > **[${language("INFORMATION_HELP_COMMANDS_FUNNY")}]**
           > \`${client.commands
             .filter((cmd) => cmd.category === "funny")
             .keyArray()
             .join("`, `")}\`
           > 
-          > **[Information]**
+          > **[${language("INFORMATION_HELP_COMMANDS_INFORMATION")}]**
           > \`${client.commands
             .filter((cmd) => cmd.category === "information")
             .keyArray()
             .join("`, `")}\`
           > 
-          > **[Moderation]**
+          > **[${language("INFORMATION_HELP_COMMANDS_MODERATION")}]**
           > \`${client.commands
             .filter((cmd) => cmd.category === "moderation")
             .keyArray()
             .join("`, `")}\`
           > 
-          > **[Music]**
+          > **[${language("INFORMATION_HELP_COMMANDS_MUSIC")}]**
           > \`${client.commands
             .filter((cmd) => cmd.category === "music")
             .keyArray()
             .join("`, `")}\`
           > 
-          > **[Utility]**
+          > **[${language("INFORMATION_HELP_COMMANDS_UTILITY")}]**
           > \`${client.commands
             .filter((cmd) => cmd.category === "utility")
             .keyArray()
@@ -98,10 +103,10 @@ module.exports = {
         message.author
           .send(embed)
           .then(() => {
-            msg.edit("Check your private messages");
+            msg.edit(`${language("INFORMATION_HELP_CHECK_PRIVATE_MESSAGES")}`);
           })
           .catch(() => {
-            msg.edit("It is not possible to send you the message...");
+            msg.edit(`${language("INFORMATION_HELP_MESSAGE_NO_POSIBLE_TO_SEND")}`);
           });
       }, 2000);
       await msg.delete({ timeout: 5000 });

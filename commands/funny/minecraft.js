@@ -21,7 +21,7 @@ module.exports = {
       if (args.join(" ").length > 23) {
         const embed = new MessageEmbed()
           .setColor("#f4f4f4")
-          .setDescription("FUNNY_MINECRAFT_CONTAIN_CHARACTERS")
+          .setDescription(language("FUNNY_MINECRAFT_CONTAIN_CHARACTERS"))
           .setTimestamp()
           .setFooter(client.version, client.user.displayAvatarURL());
         let msg = await message.channel.send(embed);

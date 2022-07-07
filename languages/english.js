@@ -89,7 +89,8 @@ const languageData = {
     MUSIC_NOW_PLAYING_CURRENTLY_PAUSED: "Currently paused",
     MUSIC_NOW_PLAYING_PROGRSS_BAR: "Progress bar",
     MUSIC_PAUSE_ALREDY_PAUSED: "The music is alredy paused.",
-    MUSIC_PAUSE_SONG_PAUSED: (song) => `${song} paused.`
+    MUSIC_PAUSE_SONG_PAUSED: (song) => `${song} paused.`,
+    MUSIC_PLAY_INDICATE_TITLE_SONG: "Please indicate the title of a song."
 };
 
 const translate = (key, ...args) => {

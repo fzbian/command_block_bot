@@ -1,4 +1,6 @@
 const { MessageEmbed } = require("discord.js");
+const DB = require("better-sqlite3");
+const settings = new DB("database/settings.db");
 
 module.exports = {
   name: "filter",
@@ -8,55 +10,28 @@ module.exports = {
   args: false,
   usage: "<filter name>",
   run: async (client, message, args) => {
-    if (!message.member.voice.channel)
-      return message.channel.send(
-        `${client.emotes.error} - You're not in a voice channel !`
-      );
+    // Language
+    let file = settings.prepare("SELECT * FROM settings WHERE guildid = ?").get(message.guild.id);
+    const guildLanguage = settings.language || "english";
+    const language = require(`../../languages/${guildLanguage}`);
 
-    if (
-      message.guild.me.voice.channel &&
-      message.member.voice.channel.id !== message.guild.me.voice.channel.id
-    )
-      return message.channel.send(
-        `${client.emotes.error} - You are not in the same voice channel !`
-      );
+    if (!message.member.voice.channel) return message.channel.send(language("MUSIC_NOT_IN_VOICE_CHANNEL"));
+    if (message.guild.me.voice.channel && message.member.voice.channel.id !== message.guild.me.voice.channel.id) return message.channel.send(language("MUSIC_NOT_IN_SAME_VOICE_CHANNEL"));
+    if (!client.player.getQueue(message)) return message.channel.send(language("MUSIC_NOT_CURRENTLY_PLAYING"));
 
-    if (!client.player.getQueue(message))
-      return message.channel.send(
-        `${client.emotes.error} - No music currently playing !`
-      );
+    if (!args[0]) return message.channel.send(language("MUSIC_FILTER_SPECIFY_FILTER"));
 
-    if (!args[0])
-      return message.channel.send(
-        `${client.emotes.error} - Please specify a valid filter to enable or disable !`
-      );
+    const filterToUpdate = client.filters.find((x) => x.toLowerCase() === args[0].toLowerCase());
 
-    const filterToUpdate = client.filters.find(
-      (x) => x.toLowerCase() === args[0].toLowerCase()
-    );
-
-    if (!filterToUpdate)
-      return message.channel.send(
-        `${client.emotes.error} - This filter doesn't exist, try for example (8D, vibrato, pulsator...) !`
-      );
+    if (!filterToUpdate) return message.channel.send(language("MUSIC_FILTER_DOESNOT_EXIST"));
 
     const filtersUpdated = {};
-
-    filtersUpdated[filterToUpdate] = client.player.getQueue(message).filters[
-      filterToUpdate
-    ]
-      ? false
-      : true;
-
+    filtersUpdated[filterToUpdate] = client.player.getQueue(message).filters[filterToUpdate] ? false : true;
     client.player.setFilters(message, filtersUpdated);
 
     if (filtersUpdated[filterToUpdate])
-      message.channel.send(
-        `${client.emotes.music} - I'm **adding** the filter to the music, please wait... Note : the longer the music is, the longer this will take.`
-      );
+      message.channel.send(language("MUSIC_FILTER_ADDING_FILTER"));
     else
-      message.channel.send(
-        `${client.emotes.music} - I'm **disabling** the filter on the music, please wait... Note : the longer the music is playing, the longer this will take.`
-      );
+      message.channel.send(language("MUSIC_FILTER_DISABLING_FILTER"));
   },
 };

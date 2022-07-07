@@ -71,6 +71,25 @@ const languageData = {
     MUSIC_NOT_CURRENTLY_PLAYING: "No music currently playing.",
     MUSIC_CLEAR_QUEUE_ONLY_ONE_SONG_IN_CHANNEL: "There is only one song in the queue.",
     MUSIC_CLEAR_QUEUE_HAS_JUST_BEEN_REMOVED: "The queue has just been removed.",
+    MUSIC_FILTER_SPECIFY_FILTER: "Please specify a valid filter to enable or disable.",
+    MUSIC_FILTER_DOESNOT_EXIST: "This filter does not exist, try again.",
+    MUSIC_FILTER_ADDING_FILTER: "I am adding the filter to the music, please wait... The longer the music is, the longer this will take.",
+    MUSIC_FILTER_DISABLING_FILTER: "I am disabling the filter to the music, please wait... The longer the music is, the longer this will take.",
+    MUSIC_LOOP_DISABLE: "Repeat mode disabled.",
+    MUSIC_LOOP_ENABLE: "Repeat mode enabled, the whole queue will be repeated enlessly.",
+    MUSIC_NOW_PLAYING_CHANNEL: "Channel",
+    MUSIC_NOW_PLAYING_REQUESTED_BY: "Requested by",
+    MUSIC_NOW_PLAYING_FROM_PLAYLIST: "From playlist",
+    MUSIC_NOW_PLAYING_YES: "Yes",
+    MUSIC_NOW_PLAYING_NO: "No",
+    MUSIC_NOW_PLAYING_VIEWS: "Views",
+    MUSIC_NOW_PLAYING_DURATION: "Duration",
+    MUSIC_NOW_PLAYING_VOLUME: "Volume",
+    MUSIC_NOW_PLAYING_REPEAT_MODE: "Repeat mode",
+    MUSIC_NOW_PLAYING_CURRENTLY_PAUSED: "Currently paused",
+    MUSIC_NOW_PLAYING_PROGRSS_BAR: "Progress bar",
+    MUSIC_PAUSE_ALREDY_PAUSED: "The music is alredy paused.",
+    MUSIC_PAUSE_SONG_PAUSED: (song) => `${song} paused.`
 };
 
 const translate = (key, ...args) => {

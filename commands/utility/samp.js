@@ -13,6 +13,10 @@ module.exports = {
   args: true,
   usage: "<ip>",
   run: async (client, message, args) => {
+    //Language
+    let file = settings.prepare("SELECT * FROM settings WHERE guildid = ?").get(message.guild.id);
+    const guildLanguage = settings.language || "english";
+    const language = require(`../../languages/${guildLanguage}`);
 
     var queryOptions = {
         host: args.join(" ")
@@ -20,19 +24,18 @@ module.exports = {
     
     query(queryOptions, function (error, response) {
         if(error) {
-            message.channel.send("Can't get information from this IP, verify it and try again.")
+            message.channel.send(language("SAMP_CANT_GET_INFO"))
             console.log(error)
         } else {
             const embed = new Discord.MessageEmbed()
-            .setTitle("SAMP Server Information.")
+            .setTitle(language("SAMP_SERVER_INFO"))
             .addFields(
-                { name: 'Hostname', value: response.hostname },
-                { name: 'Gamemode', value: response.gamemode, inline: true },
-                { name: 'Language', value: response.mapname, inline: true },
-                { name: 'Players', value: response.online + "/" + response.maxplayers, inline: true },
-                { name: 'Language', value: response.mapname, inline: true },
-                { name: 'Version', value: response.rules.version , inline: true },
-                { name: 'Web', value: response.rules.weburl , inline: true }
+                { name: language("SAMP_SERVER_INFO_HOSTNAME"), value: response.hostname },
+                { name: language("SAMP_SERVER_INFO_GAMEMODE"), value: response.gamemode, inline: true },
+                { name: language("SAMP_SERVER_INFO_LANGUAGE"), value: response.mapname, inline: true },
+                { name: language("SAMP_SERVER_INFO_PLAYERS"), value: response.online + "/" + response.maxplayers, inline: true },
+                { name: language("SAMP_SERVER_INFO_VERSION"), value: response.rules.version , inline: true },
+                { name: language("SAMP_SERVER_INFO_WEB"), value: response.rules.weburl , inline: true }
             )
             message.channel.send(embed)
         }

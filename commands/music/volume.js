@@ -1,4 +1,6 @@
 const { MessageEmbed } = require("discord.js");
+const DB = require("better-sqlite3");
+const settings = new DB("database/settings.db");
 
 module.exports = {
   name: "volume",
@@ -8,42 +10,19 @@ module.exports = {
   args: true,
   usage: "<volume [1-100]>",
   run: async (client, message, args) => {
-    if (!message.member.voice.channel)
-      return message.channel.send(
-        `${client.emotes.error} - You're not in a voice channel !`
-      );
+    // Language
+    let file = settings.prepare("SELECT * FROM settings WHERE guildid = ?").get(message.guild.id);
+    const guildLanguage = settings.language || "english";
+    const language = require(`../../languages/${guildLanguage}`);
 
-    if (
-      message.guild.me.voice.channel &&
-      message.member.voice.channel.id !== message.guild.me.voice.channel.id
-    )
-      return message.channel.send(
-        `${client.emotes.error} - You are not in the same voice channel !`
-      );
+    if (!message.member.voice.channel) return message.channel.send(language("MUSIC_NOT_IN_VOICE_CHANNEL"));
+    if (message.guild.me.voice.channel && message.member.voice.channel.id !== message.guild.me.voice.channel.id) return message.channel.send(language("MUSIC_NOT_IN_SAME_VOICE_CHANNEL"));
+    if (!client.player.getQueue(message)) return message.channel.send(language("MUSIC_NOT_CURRENTLY_PLAYING"));
 
-    if (!client.player.getQueue(message))
-      return message.channel.send(
-        `${client.emotes.error} - No music currently playing !`
-      );
-
-    if (!args[0] || isNaN(args[0]) || args[0] === "Infinity")
-      return message.channel.send(
-        `${client.emotes.error} - Please enter a valid number !`
-      );
-
-    if (
-      Math.round(parseInt(args[0])) < 1 ||
-      Math.round(parseInt(args[0])) > 100
-    )
-      return message.channel.send(
-        `${client.emotes.error} - Please enter a valid number (between 1 and 100) !`
-      );
+    if (!args[0] || isNaN(args[0]) || args[0] === "Infinity") return message.channel.send(language("MUSIC_VOLUME_VALID_NUMBER"));
+    if (Math.round(parseInt(args[0])) < 1 || Math.round(parseInt(args[0])) > 100) return message.channel.send(language("MUSIC_VOLUME_VALID_NUMBER_BETWEEN_1_AND_100"))
 
     const success = client.player.setVolume(message, parseInt(args[0]));
-
-    if (success)
-      message.channel.send(
-        `${client.emotes.success} - Volume set to **${parseInt(args[0])}%** !`
-      );
+    if (success) message.channel.send(language("MUSIC_VOLUME_SET_TO", parseInt(args[0])))
   },
 };

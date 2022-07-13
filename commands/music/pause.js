@@ -7,7 +7,7 @@ module.exports = {
   description: "Pause the song that is playing at this moment",
   aliases: [],
   category: "music",
-  args: true,
+  args: false,
   usage: "",
   run: async (client, message, args) => {
     // Language
